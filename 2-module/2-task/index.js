@@ -5,38 +5,30 @@
  * @returns {Object}
  */
 function find (obj, value) {
-    let result = [];
-    let tmp = [];
-    let path = '';
+    let results = [];
 
-    for (let key in obj) {
-        if(typeof obj[key] === 'object'){
-            path += key + '.';
-            tmp.push(find(obj[key], value));
+    let next = function (obj, path) {
 
-            if(tmp.length<=1){
-                path += tmp;
-                result.push(path);
-                path = '';
-                tmp = [];
-            } else {
-                tmp.forEach(key => {
-                    path += key;
-                    result.push(path);
-                })
+        for (let key in obj) {
+
+            if (obj[key] === value) {
+                results.push(`${path}.${key}`)
+            } else if (typeof obj[key] === 'object' && obj[key] !== null){
+                next(obj[key], `${path}${path ? '.' : ''}${key}`);
             }
-        } else if(obj[key] === value){
-            path += key;
-            result.push(path);
-            path = '';
+
         }
+
+    };
+
+    next(obj, '');
+
+    if (!results.length) {
+        return null;
+    } else if (results.length === 1) {
+        return results[0];
+    } else {
+        return results;
     }
 
-    result = result.filter(elem => {
-        return elem.charAt(elem.length-1) !== '.' && elem;
-    });
-
-    if(result.length === 0) return null;
-
-    return result.length === 1 ? result[0] : result;
 }
