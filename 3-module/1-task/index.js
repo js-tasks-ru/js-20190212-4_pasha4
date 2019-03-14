@@ -5,6 +5,15 @@
  * @returns {string}
  */
 function showSalary(data, age) {
+    let result = ''; 
+
+    for (let user of data){
+        if(user.age <= age){
+            result += user.name + ', ' + user.balance + '\n';
+        }
+    }
+
+    return result.trim();
 }
 
 
